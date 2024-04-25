@@ -32,6 +32,10 @@ resource "azurerm_private_endpoint" "this" {
       private_dns_zone_ids = each.value.private_dns_zone_resource_ids
     }
   }
+  dynamic "lifecycle" {
+    for_each = length(each.value.private_dns_zone_resource_ids) > 0 ? ["this"] : []
+    ignore_changes = ["private_dns_zone_group"]
+  }
 }
 
 resource "azurerm_private_endpoint_application_security_group_association" "this" {
